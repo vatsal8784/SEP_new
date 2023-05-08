@@ -8,5 +8,13 @@ public class Projects
     
     public User Owner { get; }
     
+    public bool isCompleted { get; set; }
+    
     public ICollection<Tasks> TasksList { get; set; }
+    
+    public Projects(User owner, string title)
+    {
+        Owner = owner;
+        ProjectName = title;
+    }
 }
