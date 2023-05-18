@@ -7,4 +7,6 @@ public class User
     public string Password{ get; set; }
     
     public ICollection<Projects> ProjectsList { get; set; }
+    
+    public ICollection<Tasks> TasksCollection { get; set; }
 }

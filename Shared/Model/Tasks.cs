@@ -6,13 +6,16 @@ public class Tasks
     
     public Projects BelongsToProjects { get; }
     
-    public String title { get; }
+    public String Title { get; }
     
     public bool isCompleted { get; set; }
+    
+    public User Owner{ get; }
 
-    public Tasks(Projects belongsToProjects, string title)
+    public Tasks(Projects belongsToProjects, string title , User owner)
     {
-        belongsToProjects = belongsToProjects;
-        title = title;
+        BelongsToProjects = belongsToProjects;
+        Title = title;
+        Owner = owner;
     }
 }

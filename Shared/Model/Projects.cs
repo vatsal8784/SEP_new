@@ -12,9 +12,9 @@ public class Projects
     
     public ICollection<Tasks> TasksList { get; set; }
     
-    public Projects(User owner, string title)
+    public Projects(User owner, string projectName)
     {
         Owner = owner;
-        ProjectName = title;
+        ProjectName = projectName;
     }
 }

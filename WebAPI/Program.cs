@@ -18,7 +18,8 @@ builder.Services.AddScoped<IUserDAO, UserDAO>();
 builder.Services.AddScoped<IUserLogic, UserLogic>();
 builder.Services.AddScoped<IProjectDAO, ProjectDAO>();
 builder.Services.AddScoped<IProjectLogic, ProjectLogic>();
-
+builder.Services.AddScoped<ITaskDAO, TaskDAO>();
+builder.Services.AddScoped<ITaskLogic, TaskLogic>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
