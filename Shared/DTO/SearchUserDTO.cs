@@ -2,10 +2,6 @@
 
 public class SearchUserDTO
 {
-    public string? UsernameContains { get;  }
-
-    public SearchUserDTO(string? usernameContains)
-    {
-        UsernameContains = usernameContains;
-    }
+    public string UsernameContains { get; set; }
+    
 }

@@ -2,103 +2,50 @@
 using App.LogicInterface;
 using Shared.DTO;
 using Shared.Model;
+using Task = System.Threading.Tasks.Task;
 
 namespace App.Logic;
 
 public class ProjectLogic : IProjectLogic
 {
-    private readonly IProjectDAO _projectDao;
-    private readonly IUserDAO _userDao;
+    private readonly IProjectDAO ProjectDao;
 
-    public ProjectLogic(IProjectDAO projectDao, IUserDAO userDao)
+    public ProjectLogic(IProjectDAO projectDao)
     {
-        this._projectDao = projectDao;
-        this._userDao = userDao;
+        ProjectDao = projectDao;
+    }
+    public async Task CreateAsync(CreateProjectDTO dto)
+    {
+        await ProjectDao.CreateAsync(dto);
     }
 
-    public async Task<Projects> CreateProjectAsync(CreateProjectDTO dto)
+    public async Task AddCollaboratorAsync(AddUserToProject collaborator)
     {
-        User? user = await _userDao.GetByIdAsync(dto.UserId);
-        if (user == null)
-        {
-            throw new Exception($"User with id {dto.UserId} was not found.");
-        }
-
-        ValidateTodo(dto);
-        Projects projects= new Projects(user, dto.ProjectName);
-        Projects created = await _projectDao.CreateProjectAsync(projects);
-        return created;
+        await ProjectDao.AddCollaborator(collaborator);;
     }
 
-    public Task<IEnumerable<Projects>> GetProjectAsync(SearchProjectDTO searchProjectDto)
+    public async Task<int> AddUserStoryAsync(CreateTaskDTO dto)
     {
-        return _projectDao.GetProjectAsync(searchProjectDto);
+        return await ProjectDao.AddUserStory(dto);
     }
 
-    public async Task UpdateProjectAsync(UpdateProjectDTO updateProjectDto)
+    public async Task<List<SearchProjectDTO>> GetAllProjects(string username)
     {
-        Projects? existing = await _projectDao.GetByIdAsync(updateProjectDto.Id);
-
-        if (existing == null)
-        {
-            throw new Exception($"Todo with ID {updateProjectDto.Id} not found!");
-        }
-
-        User? user = null;
-        if (updateProjectDto.OwnerId != null)
-        {
-            user = await _userDao.GetByIdAsync((int)updateProjectDto.OwnerId);
-            if (user == null)
-            {
-                throw new Exception($"User with id {updateProjectDto.OwnerId} was not found.");
-            }
-        }
-
-        if (updateProjectDto.IsCompleted != null && existing.isCompleted && !(bool)updateProjectDto.IsCompleted)
-        {
-            throw new Exception("Cannot un-complete a completed Todo");
-        }
-
-        User userToUse = user ?? existing.Owner;
-        string titleToUse = updateProjectDto.Title ?? existing.ProjectName;
-        bool completedToUse = updateProjectDto.IsCompleted ?? existing.isCompleted;
-    
-        Projects updated = new (userToUse, titleToUse)
-        {
-            isCompleted = completedToUse,
-            id = existing.id,
-        };
-
-        ValidateProject(updated);
-
-        await _projectDao.UpdateProjectAsync(updated);
+        return await ProjectDao.GetAllProjects(username);
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task<List<Tasks>> GetProductBacklog(int id)
     {
-        Projects? project = await _projectDao.GetByIdAsync(id);
-        if (project == null)
-        {
-            throw new Exception($"Todo with ID {id} was not found!");
-        }
-
-        if (!project.isCompleted)
-        {
-            throw new Exception("Cannot delete un-completed Todo!");
-        }
-
-        await _projectDao.DeleteAsync(id);
+        return await ProjectDao.GetProductBacklog(id);
     }
 
-    private void ValidateTodo(CreateProjectDTO dto)
+    public async Task<List<SearchUserDTO>> GetAllCollaborators(int id)
     {
-        if (string.IsNullOrEmpty(dto.ProjectName)) throw new Exception("Title cannot be empty.");
-        // other validation stuff
+        return await ProjectDao.GetAllCollaborators(id);
     }
-    
-    private void ValidateProject(Projects dto)
+
+    public async Task<int> RemoveCollaborator(AddUserToProject collaborator)
     {
-        if (string.IsNullOrEmpty(dto.ProjectName)) throw new Exception("Title cannot be empty.");
-        // other validation stuff
+        return await ProjectDao.RemoveCollaborator(collaborator);
     }
 }

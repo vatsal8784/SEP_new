@@ -10,20 +10,20 @@ namespace WebAPI.Controllers;
 [Route("[controller]")]
 public class ProjectController : ControllerBase
 {
-    private readonly IProjectLogic _projectLogic;
+    private readonly IProjectLogic projectLogic;
 
-    public ProjectController(IProjectLogic projectLogic)
+    public ProjectController(IProjectLogic _projectLogic)
     {
-        this._projectLogic = projectLogic;
+        this.projectLogic = _projectLogic;
     }
 
-    [HttpPost]
-    public async Task<ActionResult<Projects>> CreateAsync(CreateProjectDTO dto)
+   [HttpPost]
+    public async Task<ActionResult> CreateAsync(CreateProjectDTO dto)
     {
         try
         {
-            Projects created = await _projectLogic.CreateProjectAsync(dto);
-            return Created($"/todos/{created.id}", created);
+            await projectLogic.CreateAsync(dto);
+            return Created($"/project/{dto.ProjectName}", dto);
         }
         catch (Exception e)
         {
@@ -32,16 +32,13 @@ public class ProjectController : ControllerBase
         }
     }
 
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Projects>>> GetAsync([FromQuery] string? userName,
-        [FromQuery] int? userId,
-        [FromQuery] bool? completedStatus, [FromQuery] string? titleContains)
+    [HttpPut]
+    public async Task<ActionResult> AddCollaborator(AddUserToProject collaborator)
     {
         try
         {
-            SearchProjectDTO parameters = new(userName, userId, completedStatus, titleContains);
-            var todos = await _projectLogic.GetProjectAsync(parameters);
-            return Ok(todos);
+            await projectLogic.AddCollaboratorAsync(collaborator);
+            return Accepted();
         }
         catch (Exception e)
         {
@@ -50,29 +47,79 @@ public class ProjectController : ControllerBase
         }
     }
 
-    [HttpPatch]
-    public async Task<ActionResult> UpdateAsync([FromBody] UpdateProjectDTO dto)
+    [HttpPost("userStory")]
+    public async Task<ActionResult<int>> AddUserStory(CreateTaskDTO dto)
     {
         try
         {
-            await _projectLogic.UpdateProjectAsync(dto);
+            int id = await projectLogic.AddUserStoryAsync(dto);
+            return Ok(id);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
+
+    [HttpDelete]
+    public async Task<ActionResult> DeleteCollaborator(string username, int id)
+    {
+        AddUserToProject dto = new AddUserToProject
+        {
+            Username = username,
+            ProjectID = id
+        };
+        try
+        {
+            await projectLogic.RemoveCollaborator(dto);
             return Ok();
+
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return StatusCode(500, e.Message);
+            throw;
         }
-
     }
     
-    [HttpDelete("{id:int}")]
-    public async Task<ActionResult> DeleteAsync([FromRoute] int id)
+    [HttpGet("getCollaborators/{id:int}")]
+    public async Task<ActionResult<List<SearchUserDTO>>> GetAllCollaborators([FromRoute]int id)
     {
         try
         {
-            await _projectLogic.DeleteAsync(id);
-            return Ok();
+            List<SearchUserDTO> list = await projectLogic.GetAllCollaborators(id);
+            return Ok(list);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
+
+    [HttpGet("{username}")]
+    public async Task<ActionResult<List<SearchProjectDTO>>> GetAllProjects([FromRoute]string username)
+    {
+        try
+        {
+           List<SearchProjectDTO> list = await projectLogic.GetAllProjects(username);
+            return Ok(list);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
+
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<List<Tasks>>> GetProductBacklog([FromRoute] int id)
+    {
+        try
+        {
+            List<Tasks> list = await projectLogic.GetProductBacklog(id);
+            return Ok(list);
         }
         catch (Exception e)
         {

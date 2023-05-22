@@ -2,12 +2,8 @@
 
 public class CreateProjectDTO
 {
-    public int UserId { get; }
+    public string owner { get; set; }
     public string ProjectName { get; }
 
-    public CreateProjectDTO(int userId, string projectName)
-    {
-        UserId = userId;
-        ProjectName = projectName;
-    }
+    
 }

@@ -6,15 +6,10 @@ public class Projects
     
     public String ProjectName { get; set; }
     
-    public User Owner { get; }
+    public string Owner { get; set; }
     
     public bool isCompleted { get; set; }
     
-    public ICollection<Tasks> TasksList { get; set; }
+    public List<User> UsersOfProject { get; set; }
     
-    public Projects(User owner, string projectName)
-    {
-        Owner = owner;
-        ProjectName = projectName;
-    }
 }

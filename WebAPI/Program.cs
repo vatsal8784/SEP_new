@@ -1,8 +1,12 @@
-using App.DAO;
+using System.Text;
 using App.DAOInterface;
 using App.Logic;
 using App.LogicInterface;
-using FileData;
+using DataAccess.DAO;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Shared.Auth;
+using WebAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,13 +17,27 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<FileContext>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserDAO, UserDAO>();
 builder.Services.AddScoped<IUserLogic, UserLogic>();
 builder.Services.AddScoped<IProjectDAO, ProjectDAO>();
 builder.Services.AddScoped<IProjectLogic, ProjectLogic>();
-builder.Services.AddScoped<ITaskDAO, TaskDAO>();
-builder.Services.AddScoped<ITaskLogic, TaskLogic>();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+    };
+});
+
+AuthorizationPolicies.AddPolicies(builder.Services);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

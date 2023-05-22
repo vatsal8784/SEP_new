@@ -4,18 +4,10 @@ public class Tasks
 {
     public int id { get; set; }
     
-    public Projects BelongsToProjects { get; }
+    public int projectId{ get; set; }
     
-    public String Title { get; }
+    public String Title { get; set; }
     
     public bool isCompleted { get; set; }
     
-    public User Owner{ get; }
-
-    public Tasks(Projects belongsToProjects, string title , User owner)
-    {
-        BelongsToProjects = belongsToProjects;
-        Title = title;
-        Owner = owner;
-    }
 }

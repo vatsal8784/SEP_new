@@ -1,14 +1,16 @@
 ﻿using Shared.DTO;
 using Shared.Model;
+using Task = System.Threading.Tasks.Task;
+
 
 namespace App.DAOInterface;
 
 public interface IUserDAO
 {
-    Task<User> CreateUserAsync(User user);
-    Task<User?> GetByUsernameAsync(string userName);
+    Task CreateUserAsync(CreateUserDTO dto);
+    Task<User?> GetByUsernameAsync(LoginDTO loginDto);
     
-    public Task<IEnumerable<User>> GetUserAsync(SearchUserDTO searchUserDto);
+    Task<List<SearchUserDTO>> LookForUsers(string username);
     
-    Task<User?> GetByIdAsync(int id);
+    
 }

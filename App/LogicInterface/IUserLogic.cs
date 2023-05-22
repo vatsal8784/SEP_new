@@ -1,13 +1,12 @@
 ﻿using Shared.DTO;
 using Shared.Model;
+using Task = System.Threading.Tasks.Task;
 
 namespace App.LogicInterface;
 
 public interface IUserLogic
 {
-    Task<User> CreateUserAsync(CreateUserDTO createUserDto);
-
-    public Task<IEnumerable<User>> GetUserAsync(SearchUserDTO searchUserDto);
+    Task CreateAsync(CreateUserDTO dto);
     
-    Task<User> ValidateUser(CreateUserDTO dto);
+    Task<List<SearchUserDTO>> LookForUsers(string username);
 }
