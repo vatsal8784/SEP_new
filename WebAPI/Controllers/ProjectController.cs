@@ -48,7 +48,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpPost("userStory")]
-    public async Task<ActionResult<int>> AddUserStory(CreateTaskDTO dto)
+    public async Task<ActionResult<int>> AddUserStory(TaskDTO dto)
     {
         try
         {

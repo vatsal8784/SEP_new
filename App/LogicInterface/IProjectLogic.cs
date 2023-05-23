@@ -8,7 +8,7 @@ public interface IProjectLogic
 {
     Task CreateAsync(CreateProjectDTO dto);
     Task AddCollaboratorAsync(AddUserToProject collaborator);
-    Task<int> AddUserStoryAsync(CreateTaskDTO dto);
+    Task<int> AddUserStoryAsync(TaskDTO dto);
     Task<List<SearchProjectDTO>> GetAllProjects(string username);
     Task<List<Tasks>> GetProductBacklog(int id);
     

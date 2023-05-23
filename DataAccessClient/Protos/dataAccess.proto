@@ -24,6 +24,9 @@ service ProjectAccess {
   rpc AddUserStory (UserStoryMessage) returns (ResponseWithID);
   rpc GetAllProjects (Username) returns (ProjectsResponse);
   rpc GetProductBacklog (Id) returns (ProductBacklogResponse);
+  rpc UpdateUserStoryStatus(StatusUpdate) returns (Response);
+  rpc DeleteUserStory (Id) returns (Response);
+  
 }
 
 
@@ -106,4 +109,9 @@ message UserStory {
 message ProductBacklogResponse {
   repeated UserStory userStories = 1;
   int32 code = 2;
+}
+
+message StatusUpdate{
+  int32 id =1 ;
+  bool status=2;
 }

@@ -21,9 +21,7 @@
 
     <ItemGroup>
       <None Remove="Protos\dataAccess.proto" />
-      <Protobuf Include="Protos\dataAccess.proto" GrpcServices="Client">
-        <Generator>MSBuild:Compile</Generator>
-      </Protobuf>
+      <Protobuf Include="Protos\dataAccess.proto" GrpcServices="Client"/>
     </ItemGroup>
 
 </Project>

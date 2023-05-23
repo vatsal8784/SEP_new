@@ -24,7 +24,7 @@ public class ProjectLogic : IProjectLogic
         await ProjectDao.AddCollaborator(collaborator);;
     }
 
-    public async Task<int> AddUserStoryAsync(CreateTaskDTO dto)
+    public async Task<int> AddUserStoryAsync(TaskDTO dto)
     {
         return await ProjectDao.AddUserStory(dto);
     }

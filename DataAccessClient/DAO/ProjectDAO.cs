@@ -37,7 +37,7 @@ public class ProjectDAO : IProjectDAO
         return Task.FromResult(response.Code);
     }
 
-    public Task<int> AddUserStory(CreateTaskDTO dto)
+    public Task<int> AddUserStory(TaskDTO dto)
     {
         UserStoryMessage userStory = new UserStoryMessage
         {

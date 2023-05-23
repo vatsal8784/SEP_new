@@ -8,7 +8,7 @@ public interface IProjectDAO
 {
     Task CreateAsync(CreateProjectDTO dto);
     Task<int> AddCollaborator(AddUserToProject collaborator);
-    Task<int> AddUserStory(CreateTaskDTO dto);
+    Task<int> AddUserStory(TaskDTO dto);
     Task<List<SearchProjectDTO>> GetAllProjects(string username);
     Task<List<Tasks>> GetProductBacklog(int id);
     Task<int> RemoveCollaborator(AddUserToProject collaborator);

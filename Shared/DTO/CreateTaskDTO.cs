@@ -2,7 +2,13 @@
 
 public class CreateTaskDTO
 {
-    public int ProjectId { get; set; }
-    public string Title { get; set; }
+    public string Name { get; set; }
+    public string Assignee { get; set; }
     
+
+    public CreateTaskDTO(string name, string assignee)
+    {
+        Name = name;
+        Assignee = assignee;
+    }
 }
