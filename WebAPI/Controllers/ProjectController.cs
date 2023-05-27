@@ -65,7 +65,7 @@ public class ProjectController : ControllerBase
     [HttpDelete]
     public async Task<ActionResult> DeleteCollaborator(string username, int id)
     {
-        AddUserToProject dto = new AddUserToProject
+        var dto = new AddUserToProject
         {
             Username = username,
             ProjectID = id

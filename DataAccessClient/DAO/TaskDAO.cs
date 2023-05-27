@@ -11,7 +11,7 @@ public class TaskDAO : ITaskDAO
 
     public TaskDAO()
     {
-        var channel = GrpcChannel.ForAddress("http://localhost:9111");
+        var channel = GrpcChannel.ForAddress("http://localhost:8080");
         Console.WriteLine(channel.State);
         _client = new ProjectAccess.ProjectAccessClient(channel);
     }

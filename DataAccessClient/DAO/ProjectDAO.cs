@@ -12,18 +12,18 @@ public class ProjectDAO : IProjectDAO
 
     public ProjectDAO()
     {
-        var channel = GrpcChannel.ForAddress("http://localhost:9111");
+        var channel = GrpcChannel.ForAddress("http://localhost:8080");
         Console.WriteLine(channel.State);
         client = new ProjectAccess.ProjectAccessClient(channel);
     }
-    public async Task CreateAsync(CreateProjectDTO dto)
+    public async Task CreateAsync(Shared.DTO.CreateProjectDTO dto)
     {
         ProjectCreationDto request = new ProjectCreationDto
         {
             OwnerUsername = dto.owner,
             Title = dto.ProjectName
         };
-        var call = client.CreateProject(request);
+        await client.CreateProjectAsync(request);
     }
 
     public Task<int> AddCollaborator(AddUserToProject collaborator)

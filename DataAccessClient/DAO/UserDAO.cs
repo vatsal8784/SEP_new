@@ -15,7 +15,7 @@ public class UserDAO : IUserDAO
 
     public UserDAO()
     {
-        var channel = GrpcChannel.ForAddress("http://localhost:9111");
+        var channel = GrpcChannel.ForAddress("http://localhost:8080");
         Console.WriteLine(channel.State);
         Client = new UserAccess.UserAccessClient(channel);
     }
