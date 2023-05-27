@@ -1,3 +1,7 @@
+.main-layout a {
+    display: inline-block
+}
+
 .page {
     position: relative;
     display: flex;
