@@ -15,6 +15,11 @@
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="flex-column">
         <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-account-logout" aria-hidden="true"></span><h5 class="text-truncate text-capitalize">Logout</h5>
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
             <p class="m-0 text-truncate text-capitalize">user:</p>
             <h5 class="text-truncate text-capitalize">dragos cotaga</h5>
         </div>
@@ -24,11 +29,14 @@
         </div>
         <div class="nav-item px-3 nav-scrollable__menu">
             <p class="m-0 text-truncat text-capitalize">menu:</p>
-            <NavLink class="nav-link " href="dashboard" Match="NavLinkMatch.All">
+            <NavLink class="nav-link " href="project/dashboard" Match="NavLinkMatch.All">
                 <span class="oi oi-dashboard" aria-hidden="true"></span><h5 class="text-truncate text-capitalize">dashboard</h5>
             </NavLink>
-            <NavLink class="nav-link" href="board" Match="NavLinkMatch.All">
+            <NavLink class="nav-link" href="board/project" Match="NavLinkMatch.All">
                 <span class="oi oi-clipboard" aria-hidden="true"></span><h5 class="text-truncate text-capitalize">board</h5>
+            </NavLink>
+            <NavLink class="nav-link" href="projects" Match="NavLinkMatch.All">
+                <span class="oi oi-project" aria-hidden="true"></span><h5 class="text-truncate text-capitalize">Projects</h5>
             </NavLink>
         </div>
         <div class="nav-item px-3">
