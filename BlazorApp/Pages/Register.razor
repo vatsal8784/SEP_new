@@ -1,4 +1,9 @@
 ﻿@page "/register"
+@using global::Shared.DTO
+@using BlazorApp.Services.ClientInterface
+@inject NavigationManager navManager
+@inject IUserService userService
+@inject IAuthService authService
 
 <div class="container register-page">
     <div class="row align-items-center flex-column">
@@ -10,13 +15,13 @@
             <h3 class="register-page__card-header text-center pt-3">Register</h3>
             <div class="card-body">
                 <div class="input-group mb-3 ">
-                    <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+                    <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" @bind="username" @bind:event="oninput">
                 </div>
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="basic-addon2">
+                    <input type="text" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="basic-addon2" @bind="password" @bind:event="oninput">
                 </div>
                 <div class="d-grid gap-2">
-                    <button class="btn btn-primary" type="submit" value="Submit">Sign Up</button>
+                    <button class="btn btn-primary" type="submit" value="Submit" @onclick="Create">Sign Up</button>
                 </div>
             </div>
         </div>
@@ -24,5 +29,29 @@
 </div>
 
 @code {
+    private string username;
+    private string password;
+    private string resultMsg = "";
+    private string color = "";
 
+    private async Task Create()
+    {
+        resultMsg = "";
+
+        try
+        {
+            await authService.RegisterAsync(username , password);
+
+            username = "";
+            password = "";
+            resultMsg = "User successfully created";
+            color = "green";
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            resultMsg = e.Message;
+            color = "red";
+        }
+    }
 }
