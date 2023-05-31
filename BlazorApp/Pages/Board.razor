@@ -1,5 +1,9 @@
 ﻿@page "/board/project"
-
+@using System.Security.Claims
+@inject ICreateProjectService ProjectService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using BlazorApp.Services.ClientInterface
+@using global::Shared.DTO
 <div class="board-page d-flex flex-column flex-md-row">
     <div class="sidebar border border border-dark-subtle">
         <NavMenu />
@@ -8,9 +12,15 @@
         <div class="row">
             <h3>Create Tasks</h3>
             <div class="input-group mb-3">
-                <input type="text" class="form-control mb-3" placeholder="Name Task" aria-label="Project" aria-describedby="basic-addon1">
-                <button class="btn btn-primary w-100" type="button">Submit Task</button>
+              <label for="idInput">ID:</label>
+              <input type="text" class="form-control mb-3" placeholder="ID" id="idInput" aria-label="Id" aria-describedby="basic-addon1" @bind="Id" @bind:event="oninput">
+            
+              <label for="titleInput">Name Task:</label>
+              <input type="text" class="form-control mb-3" placeholder="Name Task" id="titleInput" aria-label="Project" aria-describedby="basic-addon1" @bind="Title" @bind:event="oninput">
+            
+              <button class="btn btn-primary w-100" type="button" @onclick="Create">Submit Task</button>
             </div>
+
             <h1>Board</h1>
             <div class="row">
                 <div class="col">
@@ -138,5 +148,55 @@
 </div>
 
 @code {
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthState { get; set; } = null!;
+    private string Id;
+    private string Title = "";
+    private string msg = "";
+    private IEnumerable<Claim> claims = Enumerable.Empty<Claim>();
+    
+
+    private async Task Create()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            claims = user.Claims;
+            Id = user.FindFirst(c => c.Type == ClaimTypes.Sid)?.Value;
+        }
+        else
+        {
+            msg = "The user is NOT authenticated.";
+        }
+
+        try
+        {
+            if (string.IsNullOrEmpty(Id))
+            {
+    // Handle the case when Id is null or empty
+                msg = "The user ID is missing.";
+            }
+            else if (int.TryParse(Id, out int projectId))
+            {
+                await ProjectService.CreateUserStory(new TaskDTO
+                {
+                    ProjectId = projectId,
+                    Title = Title
+                });
+            }
+            else
+            {
+    // Handle the case when Id is not a valid integer
+                msg = "The user ID is not a valid integer.";
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            msg = e.Message;
+        }
+    }
 
 }

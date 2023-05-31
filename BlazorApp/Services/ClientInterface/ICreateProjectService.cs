@@ -7,7 +7,7 @@ namespace BlazorApp.Services.ClientInterface
 {
     public interface ICreateProjectService
     {
-        Task<Project> Create(ProjectCreationDto dto);
+        Task<Project> Create(CreateProjectDTO dto);
 
 
         Task AddCollaborator(int projectId, string username);

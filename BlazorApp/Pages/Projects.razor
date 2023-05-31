@@ -1,4 +1,9 @@
 ﻿@page "/projects"
+@using System.Security.Claims
+@inject ICreateProjectService ProjectService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using BlazorApp.Services.ClientInterface
+@using global::Shared.DTO
 
 <div class="board-page d-flex flex-column flex-md-row">
     <div class="sidebar border border border-dark-subtle">
@@ -6,10 +11,14 @@
     </div>
     <div class="board-page__container container">
         <div class="row">
+                        <h3>Owner</h3>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control mb-3" placeholder="Owner" aria-label="Owner" aria-describedby="basic-addon1" @bind="name">
+                        </div>
             <h3>Create Project</h3>
             <div class="input-group mb-3">
-                <input type="text" class="form-control mb-3" placeholder="Name Project" aria-label="Project" aria-describedby="basic-addon1">
-                <button class="btn btn-primary w-100" type="button">Submit Project</button>
+                <input type="text" class="form-control mb-3" placeholder="Name Project" aria-label="Project" aria-describedby="basic-addon1" @bind="Title">
+                <button class="btn btn-primary w-100" type="button" @onclick="Create">Submit Project</button>
             </div>
             <h1>Projects</h1>
 
@@ -110,5 +119,46 @@
 </div>
 
 @code {
+  
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthState { get; set; } = null!;
+    private string name;
+    private string Title = "";
+    private string msg;
+    
+    private IEnumerable<Claim> claims = Enumerable.Empty<Claim>();
+    
 
+    private async Task Create()
+    { var authState = await AuthenticationStateProvider
+        .GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            claims = user.Claims;
+            name = user.FindFirst(c => c.Type == ClaimTypes.Sid)?.Value;
+
+        }
+        else
+        {
+            msg = "The user is NOT authenticated.";
+        }
+        
+       
+
+        try
+        {
+            await ProjectService.Create(new CreateProjectDTO
+            {
+                ProjectName = Title,
+                owner = name
+            });
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            msg = e.Message;
+        }
+    }
 }

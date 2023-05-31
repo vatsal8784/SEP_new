@@ -13,15 +13,15 @@ namespace BlazorApp.Services.Impl
     {
         private readonly HttpClient _client;
 
-        public ProjectHttpClient(HttpClient _client)
+        public ProjectHttpClient(HttpClient client)
         {
-            _client = _client;
+            _client = client;
         }
 
 
-        public async Task<Project> Create(ProjectCreationDto dto)
+        public async Task<Project> Create(CreateProjectDTO dto)
         {
-            var response = await _client.PostAsJsonAsync("api/projects", dto);
+            var response = await _client.PostAsJsonAsync("/project", dto);
             var result = await response.Content.ReadAsStringAsync();
             if (!response.IsSuccessStatusCode)
             {
@@ -52,14 +52,13 @@ namespace BlazorApp.Services.Impl
 
         public async Task<List<SearchUserDTO>> GetAllCollaborators(int id)
         {
-            var response = await _client.GetAsync($"/Project/getCollaborators/{id}");
-            var result = response.Content.ReadAsStringAsync();
+            var response = await _client.GetAsync($"/project/{id}/collaborator");
+            var result = await response.Content.ReadAsStringAsync();
             if (!response.IsSuccessStatusCode)
             {
                 Console.WriteLine(response);
             }
-
-            var collaborators = JsonSerializer.Deserialize<List<SearchUserDTO>>(result, new JsonSerializerOptions(
+            var collaborators = JsonSerializer.Deserialize<List<SearchUserDTO>>(result, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             })!;

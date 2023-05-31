@@ -16,10 +16,11 @@ builder.Services.AddScoped<IUserService, UserHttpClient>();
 builder.Services.AddScoped<ICreateProjectService, ProjectHttpClient>();
 builder.Services.AddScoped<ICreateTaskService, CreateTaskHttpClient>();
 
+
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthProvider>();
 AuthorizationPolicies.AddPolicies(builder.Services);
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7156") });
 
 builder.Services.AddAuthorizationCore();
 await builder.Build().RunAsync();

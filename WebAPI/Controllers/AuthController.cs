@@ -9,7 +9,8 @@ using Shared.Model;
 using WebAPI.Services;
 
 namespace WebAPI.Controllers;
-
+[ApiController]
+[Route("[controller]")]
 public class AuthController : ControllerBase
 {
     private readonly IConfiguration config;

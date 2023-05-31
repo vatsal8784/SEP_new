@@ -28,7 +28,7 @@ namespace BlazorApp.Services
             string userAsJson = JsonSerializer.Serialize(userLoginDto);
             StringContent content = new(userAsJson, Encoding.UTF8, "application/json");
 
-            HttpResponseMessage response = await client.PostAsync("https://localhost:7203/auth/login", content);
+            HttpResponseMessage response = await client.PostAsync("https://localhost:7156/auth/login", content);
             string responseContent = await response.Content.ReadAsStringAsync();
             Console.WriteLine(response.StatusCode);
 
@@ -65,7 +65,7 @@ namespace BlazorApp.Services
 
             string userAsJson = JsonSerializer.Serialize(user);
             StringContent content = new(userAsJson, Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await client.PostAsync("https://localhost:7203/auth/register", content);
+            HttpResponseMessage response = await client.PostAsync("https://localhost:7156/auth/register", content);
             string responseContent = await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)
